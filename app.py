@@ -17,8 +17,3 @@ def view(id):
         return render_template('fullbanner_1.html')
     elif id == '2':
         return render_template('fullbanner_2.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
