@@ -1,0 +1,595 @@
+
+<div class="cookiebanner">
+    <div class="inroduction">
+          <h3>Cookie Banner 2</h3>
+          <p>Wir verwenden Cookies, um Ihnen ein angenehmeres Surfen zu ermöglichen. Durch die Nutzung unserer Website stimmen Sie der Verwendung von Cookies zu.</p>
+      </div>
+
+    <div class="options">
+        <button class="rejectAll" onclick="DeclineAll()">Ablehnen</button>
+        <button class="settings" onclick="ShowCookieSettings()">Konfigurieren</button>
+        <button class="acceptAll" onclick="AcceptAll()">Alle akzeptieren</button>
+    </div>
+
+    <div class="link">
+        <a href="datenschutz.html" style="margin:5px">Datenschutzerklärung</a>
+        <a href="impressum.html" style="margin:5px">Impressum</a>
+    </div>
+</div>
+    
+<div class="cookiebanner-toggle hidden">
+    <button class="cookiebanner-toggle-button" onclick="ToggleCookieBanner()" >
+        <img src="{{url_for('static', filename = 'cookie.png')}}" alt="Cookie Icon" width="60px" height="60px">        
+    </button>
+</div>
+    
+<div class="cookiebanner-settings hidden">
+    <div class="cookiebanner-settings-content">
+        <h3>Cookie Einstellungen</h3>
+        <p>Wir verwenden Cookies, um Ihnen ein angenehmeres Surfen zu ermöglichen. Durch die Nutzung unserer Website stimmen Sie der Verwendung von Cookies zu.</p>
+        <ol class="switches">
+            <li>
+                <input type="checkbox" id="1" class="necessary" checked disabled>
+                <label for="1">
+                <span>Notwendige Cookies</span>
+                <span></span>
+                </label>
+            </li>
+            <li>
+                <input type="checkbox" id="2" class="statistics" checked>
+                <label for="2">
+                <span>Statistik Cookies</span>
+                <span></span>
+                </label>
+            </li>
+            <li>
+                <input type="checkbox" id="3" class="marketing" checked>
+                <label for="3">
+                <span>Marketing Cookies</span>
+                <span></span>
+                </label>
+            </li>
+        </ol>
+        <div class="settings-button-group column-50 center">
+            <button class="settings-button" onclick="CloseCookieSettings()">Schließen</button>
+            <button class="settings-button" onclick="SaveCookieSettings()">Auswahl bestätigen</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const cookieBanner = document.querySelector('.cookiebanner');
+const cookiebanner_toggle = document.querySelector('.cookiebanner-toggle');
+const cookiebanner_settings = document.querySelector('cookiebanner-settings');
+
+// On Page load, check if Cookie is set, if not, show Banner, if yes, load trackers
+window.addEventListener('load', () => {
+    cookieValue = LoadCookieSettings(); 
+
+    if (cookieValue != null) {
+        cookiebanner_toggle.classList.remove('hidden');
+        LoadTrackers();
+    }
+    else {
+        cookieBanner.classList.remove('hidden');
+        //RemoveTrackers();
+        //RemoveAllCookies();
+    }
+});
+
+
+// Show / Hide Banner and set Cookie
+function AcceptAll() {
+    cookieBanner.classList.add('hidden');
+    document.getElementsByClassName("cookiebanner-toggle")[0].classList.remove("hidden");
+    document.cookie = 'cookieBannerDisplayed=true; max-age=31536000';
+    AcceptCookieSettings();
+}
+
+function DeclineAll() {
+    cookieBanner.classList.add('hidden');
+    document.getElementsByClassName("cookiebanner-toggle")[0].classList.remove("hidden");
+    document.cookie = 'cookieBannerDisplayed=false; max-age=31536000';
+    DeclineCookieSettings();
+}
+
+
+// Reads out the set Cookie
+function LoadCookieSettings() {
+    const cookie = document.cookie.split(';').find(row => row.startsWith('cookieSettings'));
+    if (cookie) {
+        const cookieValue = cookie.split('=')[1];
+        return JSON.parse(cookieValue);
+    }
+}
+
+
+// Load Trackers + Cookies on Opt-In
+function LoadTrackers() {
+
+    // Check if Google Analytics exists, and if not, load it
+    var ga_element = document.querySelector('script[src="https://www.google-analytics.com/analytics.js"]');
+    var ga2_element = document.querySelector('script[src="https://www.googletagmanager.com/gtag/js?id=UA-468959-2"]');
+
+    if(ga_element == null && ga2_element == null) {
+        const ga = document.createElement('script');
+        ga.src = 'https://www.googletagmanager.com/gtag/js?id=UA-468959-2';
+        document.head.appendChild(ga);
+    
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-468959-2');
+    }
+}
+
+
+// Remove Trackers + Cookies on Opt-Out
+function RemoveTrackers() {
+    var ga = document.querySelector('script[src="https://www.google-analytics.com/analytics.js"]');
+    var ga2 = document.querySelector('script[src="https://www.googletagmanager.com/gtag/js?id=UA-468959-2"]');
+    var fbp = document.querySelector('script[src="https://connect.facebook.net/en_US/fbevents.js"]');
+    if (ga) { ga.remove(); }
+    if (ga2) { ga2.remove(); }
+    if (fbp) { fbp.remove(); }
+}
+
+function RemoveAllCookies() {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        if (name !== 'cookieBannerDisplayed' || name !== 'cookieSettings') {
+            document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+    }
+}
+
+
+// Show / Hide Cookie Settings
+function ShowCookieSettings() {
+    document.getElementsByClassName("cookiebanner-settings")[0].classList.remove("hidden");
+    cookieBanner.classList.add('hidden');
+}
+
+function CloseCookieSettings() {
+    document.getElementsByClassName("cookiebanner-settings")[0].classList.add("hidden");
+    cookieBanner.classList.remove('hidden');
+}
+
+
+// Accept selected Trackers
+function SaveCookieSettings() {
+    var necessary = document.getElementsByClassName("necessary")[0].checked;
+    var statistics = document.getElementsByClassName("statistics")[0].checked;
+    var marketing = document.getElementsByClassName("marketing")[0].checked;
+
+    var cookieSettings = {
+        necessary: necessary,
+        statistics: statistics,
+        marketing: marketing
+    };
+
+    var cookieSettingsString = JSON.stringify(cookieSettings);
+    document.cookie = 'cookieSettings=' + cookieSettingsString + '; max-age=31536000';
+    console.log(cookieSettingsString);
+
+    document.getElementsByClassName("cookiebanner-settings")[0].classList.add("hidden");
+    cookiebanner_toggle.classList.remove('hidden');
+}
+
+// Decline all Trackers
+function DeclineCookieSettings() {
+    var cookieSettings = {
+        necessary: true,
+        statistics: false,
+        marketing: false
+    };
+
+    var cookieSettingsString = JSON.stringify(cookieSettings);
+    document.cookie = 'cookieSettings=' + cookieSettingsString + '; max-age=31536000';
+    console.log(cookieSettingsString);
+}
+
+
+// Accept all Trackers
+function AcceptCookieSettings() {
+    var cookieSettings = {
+        necessary: true,
+        statistics: true,
+        marketing: true
+    };
+ 
+    var cookieSettingsString = JSON.stringify(cookieSettings);
+    document.cookie = 'cookieSettings=' + cookieSettingsString + '; max-age=31536000';
+    console.log(cookieSettingsString);
+}
+ 
+
+// Show/Hide Cookie Banner with the Toggle Button
+function ToggleCookieBanner() {
+    if (cookieBanner.classList.contains('hidden')) {
+        cookieBanner.classList.remove('hidden');
+        document.getElementsByClassName("cookiebanner-toggle")[0].classList.add("hidden");
+        
+    } else {
+        cookieBanner.classList.add('hidden');
+    }
+}
+
+
+// Load User Data
+function FindUserLocation() {
+    fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+            return {
+                "city": data.city,
+                "country": data.country_name
+            };
+        });
+}
+
+function FindUserLanguage() {
+    return navigator.language;
+}
+
+function FindUserDevice() {
+    return navigator.platform;
+}
+
+function FindUserBrowser() {
+    return navigator.userAgent;
+}
+
+function FindUserOS() {
+    return navigator.appVersion;
+}
+
+function FindUserScreenSize() {
+    return {
+        "width": window.screen.width,
+        "height": window.screen.height
+    };
+}
+
+function FindUserViewportSize() {
+    return {
+        "width": window.innerWidth,
+        "height": window.innerHeight
+    };
+}
+
+function FindUserReferrer() {
+    return document.referrer;
+}
+
+// FOR LATER
+function OnlyInEU() {
+    // Only display Cookie Banner in Countries if User is within the European Union
+    const requiredCountries = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'];
+    const userCountry = localStorage.getItem('userCountry');
+    if (!userCountry) {
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('userCountry', data.country);
+                if (requiredCountries.includes(data.country)) {
+                    cookieBanner.classList.remove('hidden');
+                }
+            });
+    } else {
+        if (requiredCountries.includes(userCountry)) {
+            cookieBanner.classList.remove('hidden');
+        }
+    }
+
+}
+</script>
+
+  
+<style>
+.cookiebanner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ccc;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.cookiebanner .inroduction {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cookiebanner .inroduction h3 {
+    margin: 0;
+}
+
+.cookiebanner .inroduction p {
+    margin: 0;
+}
+
+.cookiebanner .options {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.cookiebanner .options button {
+    margin: 0 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.cookiebanner .link {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.cookiebanner .link a {
+    text-decoration: none;
+    color: #000;
+}
+
+.hidden {
+    display: none;
+}
+
+
+.cookiebanner button {
+    border-radius: 15px;
+    padding: 10px;
+}
+
+
+.cookiebanner button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.cookiebanner .options button.acceptAll {
+    background-color: green;
+    color: #fff;
+}
+
+.cookiebanner .options button.rejectAll {
+    background-color: red;
+    color: #fff;
+}
+
+.cookiebanner-toggle button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin: 3%;
+}
+
+
+/* Settings Screen */
+:root {
+    --white: #e8e9ed;
+    --gray: #434257;
+    --blue: #18172c;
+    --green: #00d084;
+    --pink: #ff4b77;
+  }
+
+  .cookiebanner-settings column-50{
+    display: flex;
+    width: 20%;
+  }
+
+  .cookiebanner-settings .center {
+    margin: 0 auto;
+    }
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  ol {
+    list-style: none;
+  }
+  
+  label {
+    cursor: pointer;
+  }
+  
+  [type="checkbox"] {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .switches {
+    max-width: 500px;
+    width: 95%;
+    margin: 50px auto 0;
+    border-radius: 5px;
+  }
+  
+  .switches li {
+    position: relative;
+    counter-increment: switchCounter;
+  }
+  
+  .switches li:not(:last-child) {
+    border-bottom: 1px solid var(--gray);
+  }
+  
+  .switches li::before {
+    content: counter(switchCounter);
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--pink);
+  }
+  
+  .switches label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+  }
+  
+  .switches span:last-child {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    border-radius: 15px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
+    background: var(--pink);
+    transition: all 0.3s;
+  }
+  
+  .switches span:last-child::before,
+  .switches span:last-child::after {
+    content: "";
+    position: absolute;
+  }
+  
+  .switches span:last-child::before {
+    left: 1px;
+    top: 1px;
+    width: 24px;
+    height: 24px;
+    background: var(--white);
+    border-radius: 50%;
+    z-index: 1;
+    transition: transform 0.3s;
+  }
+  
+  .switches span:last-child::after {
+    top: 50%;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    transform: translateY(-50%);
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/uncheck-switcher.svg);
+    background-size: 12px 12px;
+  }
+  
+  /* When checkbox of .switches is checked, change the background to green*/
+  .switches [type="checkbox"]:checked + label span:last-child {
+    background: var(--green);
+  }
+  
+  /* When checkbox of .switches is checked, move the icon to the right*/
+  .switches [type="checkbox"]:checked + label span:last-child::before {
+    transform: translateX(24px);
+  }
+  
+  .switches [type="checkbox"]:checked + label span:last-child::after {
+    width: 14px;
+    height: 14px;
+    /*right: auto;*/
+    left: 8px;
+    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/checkmark-switcher.svg);
+    background-size: 14px 14px;
+  }
+  
+  /* When screen below 600px width, hide the index numbers */
+  @media screen and (max-width: 600px) {
+    .switches li::before {
+      display: none;
+    }
+  }
+
+ 
+
+  /* ---BUTTONS--- */
+
+  .settings-button-group button {
+    appearance: button;
+    background-color: #1899D6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: din-round,sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 10px;
+    outline: none;
+    overflow: visible;
+    padding: 13px 16px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 100%;
+  }
+  
+  .settings-button-group button:after {
+    background-clip: padding-box;
+    background-color: #1CB0F6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+  
+  .settings-button-group button:main,
+  .settings-button-group button:focus {
+    user-select: auto;
+  }
+  
+  
+  .settings-button-group button:hover:not(:disabled) {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+  }
+  
+  .settings-button-group button:disabled {
+    cursor: auto;
+  }
+</style>
