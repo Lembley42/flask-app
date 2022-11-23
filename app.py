@@ -11,7 +11,6 @@ bp = Blueprint('fullbanner', __name__, url_prefix='/cms/<id>')
 app.register_blueprint(bp)
 
 @app.route('/cms/<id>', methods=['GET'])
-@minify_decorators.minify(html=True, js=True, cssless=True)
 def view(id):
     if id == '1': 
         return render_template('fullbanner_1.html')
