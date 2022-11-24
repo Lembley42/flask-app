@@ -11,23 +11,25 @@ redis_host = os.environ.get('REDIS_HOST', '')
 redis_port = os.environ.get('REDIS_PORT', '')
 redis_pw = os.environ.get('REDIS_PW', '')
 
-redis_db = redis.StrictRedis(host=redis_host, port=int(redis_host), password=redis_pw, ssl=True)
+
+redis_db = redis.StrictRedis(host=redis_host, port=int(redis_port), password=redis_pw, ssl=True)
 redis_db.ping()
 
 bp = Blueprint('fullbanner', __name__, url_prefix='/cms/<id>')
-create = Blueprint('create', __name__, url_prefix='/create/<id>')
-
+createBanner = Blueprint('createBanner', __name__, url_prefix='/create/<id>')
 
 app.register_blueprint(bp)
-app.register_blueprint(create)
+app.register_blueprint(createBanner)
 
 
 @app.route('/cms/<id>', methods=['GET'])
 def view(id):
-    return redis_db.get(id)
+    banner = redis_db.get(id)
+    if banner: return banner
+    else: return 'Invalid ID'
 
 
-@app.route('/create/<id>', methods=['GET'])
+@app.route('/create/<id>', methods=['GET', 'POST'])
 def create(id):
     headline = request.args.get('headline')
 
@@ -35,8 +37,4 @@ def create(id):
     redis_db.set(id, template)
     print(f'Created banner {id} with headline {headline}')
     return f'Sucessfully created the template and stored it with Id {id}'
-
-
-if __name__ == '__main__':
-    app.run()
 
