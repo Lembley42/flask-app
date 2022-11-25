@@ -23,7 +23,7 @@ app.register_blueprint(createBanner)
 
 @app.route('/cms/<id>', methods=['GET'])
 def view(id):
-    banner = collection.find_one({'_id': id})
+    banner = collection.find_one({'_id': id})['banner']
     if banner: return banner
     else: return 'Invalid ID'
 
