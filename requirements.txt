@@ -4,4 +4,4 @@ flask_cors
 flask_minify
 gunicorn
 gevent
-redis
+pymongo
