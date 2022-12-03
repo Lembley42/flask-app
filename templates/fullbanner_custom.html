@@ -1,61 +1,90 @@
 
 <div class="cookiebanner">
     <div class="inroduction">
-          <h3>{{data['headline']}}</h3>
-          <p>{{data['introduction']}}</p>
+          <h3>{{d.banner.headline}}</h3>
+          <p>{{d.banner.introduction}}</p>
       </div>
 
     <div class="options">
-        <button class="rejectAll" onclick="DeclineAll()">Ablehnen</button>
-        <button class="settings" onclick="ShowCookieSettings()">Konfigurieren</button>
-        <button class="acceptAll" onclick="AcceptAll()">Alle akzeptieren</button>
+        <button class="rejectAll" 
+            onclick="DeclineAll()"
+            style="background-color: {{d.banner.buttons.decline.background_color}};
+            color: {{d.banner.buttons.decline.color}};">
+            {{d.banner.buttons.decline.text}}
+        </button>
+        <button class="settings" 
+            onclick="ShowCookieSettings()"
+            style="background-color: {{d.banner.buttons.settings.background_color}};
+            color: {{d.banner.buttons.settings.color}};">
+            {{d.banner.buttons.settings.text}}
+        </button>
+        <button class="acceptAll" 
+            onclick="AcceptAll()"
+            style="background-color: {{d.banner.buttons.accept.background_color}};
+            color: {{d.banner.buttons.accept.color}};">
+            {{d.banner.buttons.accept.text}}
+        </button>
     </div>
 
     <div class="link">
-        <a href={{data['privacy-link']}} style="margin:5px">Datenschutzerklärung</a>
-        <a href={{data['imprint_link']}} style="margin:5px">Impressum</a>
+        <a href={{d.banner.privacy_link}} style="margin:5px">Datenschutzerklärung</a>
+        <a href={{d.banner.imprint_link}} style="margin:5px">Impressum</a>
     </div>
 </div>
     
 <div class="cookiebanner-toggle hidden">
     <button class="cookiebanner-toggle-button" onclick="ToggleCookieBanner()" >
-        <img src="{{url_for('static', filename = 'cookie.png')}}" alt="Cookie Icon" width="60px" height="60px">        
+        <img 
+            src="{{url_for('static', filename = 'cookie.png')}}" 
+            style="background-color: {{d.toggle.background_color}};
+            color:{{d.toggle.color}};" 
+            alt="Cookie Icon" 
+            width="60px" height="60px">        
     </button>
 </div>
     
 <div class="cookiebanner-settings hidden">
     <div class="cookiebanner-settings-content">
-        <h3>Cookie Einstellungen</h3>
-        <p>Wir verwenden Cookies, um Ihnen ein angenehmeres Surfen zu ermöglichen. Durch die Nutzung unserer Website stimmen Sie der Verwendung von Cookies zu.</p>
+        <h3>{{d.settings.headline}}</h3>
+        <p>{{d.settings.introduction}}</p>
         <ol class="switches">
             <li>
                 <input type="checkbox" id="1" class="necessary" checked disabled>
                 <label for="1">
-                <span>Notwendige Cookies</span>
+                <span>{{d.settings.categories.necessary.headline}}</span>
                 <span></span>
                 </label>
             </li>
             <li>
-                <input type="checkbox" id="2" class="statistics" checked>
+                <input type="checkbox" id="2" class="preferences" checked>
                 <label for="2">
-                <span>Statistik Cookies</span>
+                <span>{{d.settings.categories.preferences.headline}}</span>
                 <span></span>
                 </label>
             </li>
             <li>
-                <input type="checkbox" id="3" class="marketing" checked>
+                <input type="checkbox" id="3" class="statistics" checked>
                 <label for="3">
-                <span>Marketing Cookies</span>
+                <span>{{d.settings.categories.statistics.headline}}</span>
                 <span></span>
                 </label>
             </li>
+            <li>
+                <input type="checkbox" id="4" class="marketing" checked>
+                <label for="4">
+                <span>{{d.settings.categories.marketing.headline}}</span>
+                <span></span>
+                </label>
+            </li>
+
         </ol>
         <div class="settings-button-group column-50 center">
-            <button class="settings-button" onclick="CloseCookieSettings()">Schließen</button>
-            <button class="settings-button" onclick="SaveCookieSettings()">Auswahl bestätigen</button>
+            <button class="settings-button" onclick="CloseCookieSettings()">{{d.settings.buttons.close.text}}</button>
+            <button class="settings-button" onclick="SaveCookieSettings()">{{d.settings.buttons.save.text}}</button>
         </div>
     </div>
 </div>
+
 
 <script>
 const cookieBanner = document.querySelector('.cookiebanner');

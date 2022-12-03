@@ -1,6 +1,82 @@
 {
-    "headline": "Cookie Banner",
-    "text": "We use cookies to ensure that we give you the best experience on our website. If you continue to use this site we will assume that you are happy with it.",
-    "privacy_link": "/datenschutz",
-    "imprint_link": "/impressum"
+    "banner": {
+        "headline": "Cookie Banner",
+        "introduction": "We use cookies to ensure that we give you the best experience on our website. If you continue to use this site we will assume that you are happy with it.",
+        "privacy_link": "/datenschutz",
+        "imprint_link": "/impressum",
+        "buttons": {
+            "accept": {
+                "text": "Accept",
+                "color": "#ffffff",
+                "background_color": "green"
+            },
+            "decline": {
+                "text": "Decline",
+                "color": "#ffffff",
+                "background_color": "red"
+            },
+            "settings": {
+                "text": "Settings",
+                "color": "black",
+                "background_color": "white"
+            }
+        }
+    },
+    "settings": {
+        "headline": "Cookie Settings",
+        "introduction": "Here you can change the settings for the cookies used on this website.",
+        "categories": {
+            "necessary": {
+                "headline": "Necessary",
+                "description": "Necessary cookies are absolutely essential for the website to function properly. This category only includes cookies that ensure basic functionalities and security features of the website. These cookies do not store any personal information.",
+                "preenabled": true
+            },
+            "preferences": {
+                "headline": "Preferences",
+                "description": "Preference cookies are used to store user preferences and settings.",
+                "preenabled": false
+            },
+            "statistics": {
+                "headline": "Statistics",
+                "description": "Statistics cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously.",
+                "preenabled": false
+            },
+            "marketing": {
+                "headline": "Marketing",
+                "description": "Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third-party advertisers.",
+                "preenabled": false
+            }
+        },
+        "buttons": {
+            "save": {
+                "text": "Save",
+                "color": "#ffffff",
+                "background_color": "#000000"
+            },
+            "close": {
+                "text": "Close",
+                "color": "#ffffff",
+                "background_color": "#000000"
+            }
+        }
+    },
+    "toggle": {
+        "icon": "fa fa-cog",
+        "color": "#ffffff",
+        "background_color": "#000000"
+    },
+    "trackers": {
+        "google_analytics": {
+            "name": "Google Analytics",
+            "description": "Google Analytics is a web analytics service offered by Google that tracks and reports website traffic. Google uses the data collected to track and monitor the use of our Service. This data is shared with other Google services. Google may use the collected data to contextualize and personalize the ads of its own advertising network.",
+            "cookies": [
+                "_ga",
+                "_gat",
+                "_gid"
+            ],
+            "active": true,
+            "category": "analytics"
+        }
+    }
 }
+

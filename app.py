@@ -2,7 +2,7 @@ from flask import Flask, Blueprint, flash, g, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_minify import Minify, decorators as minify_decorators
-import os, pymongo
+import os, pymongo, json
 
 app = Flask(__name__)
 CORS(app)
@@ -10,9 +10,9 @@ CORS(app)
 mongo_username = os.environ.get('MONGO_USER', '')
 mongo_pw = os.environ.get('MONGO_PW', '')
 
-client = pymongo.MongoClient(f'mongodb+srv://{mongo_username}:{mongo_pw}@webscraper.73l0qzo.mongodb.net/?retryWrites=true&w=majority')
-db = client['cookiebanner']
-collection = db['domain']
+#client = pymongo.MongoClient(f'mongodb+srv://{mongo_username}:{mongo_pw}@webscraper.73l0qzo.mongodb.net/?retryWrites=true&w=majority')
+#db = client['cookiebanner']
+#collection = db['domain']
 
 bp = Blueprint('fullbanner', __name__, url_prefix='/cms/<id>')
 createBanner = Blueprint('createBanner', __name__, url_prefix='/create/<id>')
@@ -37,3 +37,14 @@ def create(id):
     collection.insert_one({'_id': id, 'banner': template})
     print(f'Created banner {id}')
     return f'Sucessfully created the template and stored it with Id {id}'
+
+
+@app.route('/', methods=['GET'])
+def index():
+    data = json.load(open('backend/templates/customization.json'))
+    return render_template('fullbanner_custom.html', d=data)
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
