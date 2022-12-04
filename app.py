@@ -18,7 +18,7 @@ collection = db['domain']
 # Blueprints
 getBanner = Blueprint('getBanner', __name__, url_prefix='/get/<id>')
 createBanner = Blueprint('createBanner', __name__, url_prefix='/create/<id>')
-testBanner = Blueprint('testBanner', __name__, url_prefix='/test/')
+testBanner = Blueprint('testBanner', __name__, url_prefix='/test')
 previewBanner = Blueprint('previewBanner', __name__, url_prefix='/preview/<id>')
 app.register_blueprint(getBanner)
 app.register_blueprint(createBanner)
