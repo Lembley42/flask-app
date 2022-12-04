@@ -43,7 +43,7 @@ def create(id):
 
 
 @app.route('/test', methods=['GET'])
-def test(id):
+def test():
     data = json.load(open('customization.json'))
     return render_template('fullbanner_custom.html', d=data)
 
