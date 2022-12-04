@@ -1,6 +1,6 @@
 
 <div class="cookiebanner">
-    <div class="inroduction">
+    <div class="introduction">
           <h3>{{d.banner.headline}}</h3>
           <p>{{d.banner.introduction}}</p>
       </div>
@@ -78,7 +78,7 @@
             </li>
 
         </ol>
-        <div class="settings-button-group column-50 center">
+        <div class="settings-button-group">
             <button class="settings-button" onclick="CloseCookieSettings()">{{d.settings.buttons.close.text}}</button>
             <button class="settings-button" onclick="SaveCookieSettings()">{{d.settings.buttons.save.text}}</button>
         </div>
@@ -324,7 +324,7 @@ function OnlyInEU() {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 150px;
+    height: 200px;
     background-color: #f1f1f1;
     border-top: 1px solid #ccc;
     z-index: 1000;
@@ -335,7 +335,7 @@ function OnlyInEU() {
     padding: 10px;
 }
 
-.cookiebanner .inroduction {
+.cookiebanner .introduction {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -343,11 +343,11 @@ function OnlyInEU() {
     align-items: center;
 }
 
-.cookiebanner .inroduction h3 {
+.cookiebanner .introduction h1,h2,h3,h4,h5,h6 {
     margin: 0;
 }
 
-.cookiebanner .inroduction p {
+.cookiebanner .introduction p {
     margin: 0;
 }
 
@@ -364,7 +364,6 @@ function OnlyInEU() {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #fff;
     cursor: pointer;
 }
 
@@ -385,12 +384,10 @@ function OnlyInEU() {
     display: none;
 }
 
-
 .cookiebanner button {
     border-radius: 15px;
     padding: 10px;
 }
-
 
 .cookiebanner button {
     display: block;
@@ -401,16 +398,8 @@ function OnlyInEU() {
     cursor: pointer;
 }
 
-.cookiebanner .options button.acceptAll {
-    background-color: green;
-    color: #fff;
-}
 
-.cookiebanner .options button.rejectAll {
-    background-color: red;
-    color: #fff;
-}
-
+/* Toggle Icon */
 .cookiebanner-toggle button {
     position: fixed;
     bottom: 0;
@@ -433,50 +422,56 @@ function OnlyInEU() {
     --pink: #ff4b77;
   }
 
-  .cookiebanner-settings column-50{
+  .cookiebanner-settings * {
+    text-align: center;
+  }
+
+  .settings-button-group {
+    margin: 0 auto;
     display: flex;
     width: 20%;
   }
 
-  .cookiebanner-settings .center {
-    margin: 0 auto;
-    }
-  
-  a {
-    color: inherit;
-    text-decoration: none;
+  .settings-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
   }
-  
-  ol {
+
+
+  /* Switches for Categories/Trackers */
+  .cookiebanner-settings ol {
     list-style: none;
   }
-  
-  label {
+
+  .cookiebanner-settings label {
     cursor: pointer;
   }
   
-  [type="checkbox"] {
+  .cookiebanner-settings [type="checkbox"] {
     position: absolute;
     left: -9999px;
   }
 
-  .switches {
+  .cookiebanner-settings .switches {
     max-width: 500px;
     width: 95%;
     margin: 50px auto 0;
     border-radius: 5px;
   }
   
-  .switches li {
+  .cookiebanner-settings .switches li {
     position: relative;
     counter-increment: switchCounter;
   }
   
-  .switches li:not(:last-child) {
+  .cookiebanner-settings .switches li:not(:last-child) {
     border-bottom: 1px solid var(--gray);
   }
   
-  .switches li::before {
+  .cookiebanner-settings .switches li::before {
     content: counter(switchCounter);
     position: absolute;
     top: 50%;
@@ -487,14 +482,14 @@ function OnlyInEU() {
     color: var(--pink);
   }
   
-  .switches label {
+  .cookiebanner-settings .switches label {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 15px;
   }
   
-  .switches span:last-child {
+  .cookiebanner-settings .switches span:last-child {
     position: relative;
     width: 50px;
     height: 26px;
@@ -504,13 +499,13 @@ function OnlyInEU() {
     transition: all 0.3s;
   }
   
-  .switches span:last-child::before,
-  .switches span:last-child::after {
+  .cookiebanner-settings .switches span:last-child::before,
+  .cookiebanner-settings .switches span:last-child::after {
     content: "";
     position: absolute;
   }
   
-  .switches span:last-child::before {
+  .cookiebanner-settings .switches span:last-child::before {
     left: 1px;
     top: 1px;
     width: 24px;
@@ -521,32 +516,33 @@ function OnlyInEU() {
     transition: transform 0.3s;
   }
   
-  .switches span:last-child::after {
+  .cookiebanner-settings .switches span:last-child::after {
     top: 50%;
     right: 8px;
     width: 12px;
     height: 12px;
     transform: translateY(-50%);
-    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/uncheck-switcher.svg);
+    background: url('../static/uncheck-switcher.svg');
     background-size: 12px 12px;
   }
   
+  
   /* When checkbox of .switches is checked, change the background to green*/
-  .switches [type="checkbox"]:checked + label span:last-child {
+  .cookiebanner-settings .switches [type="checkbox"]:checked + label span:last-child {
     background: var(--green);
   }
   
   /* When checkbox of .switches is checked, move the icon to the right*/
-  .switches [type="checkbox"]:checked + label span:last-child::before {
+  .cookiebanner-settings .switches [type="checkbox"]:checked + label span:last-child::before {
     transform: translateX(24px);
   }
   
-  .switches [type="checkbox"]:checked + label span:last-child::after {
+  .cookiebanner-settings .switches [type="checkbox"]:checked + label span:last-child::after {
     width: 14px;
     height: 14px;
     /*right: auto;*/
     left: 8px;
-    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/checkmark-switcher.svg);
+    background-image: url('../static/checkmark-switcher.svg');
     background-size: 14px 14px;
   }
   
@@ -555,70 +551,5 @@ function OnlyInEU() {
     .switches li::before {
       display: none;
     }
-  }
-
- 
-
-  /* ---BUTTONS--- */
-
-  .settings-button-group button {
-    appearance: button;
-    background-color: #1899D6;
-    border: solid transparent;
-    border-radius: 16px;
-    border-width: 0 0 4px;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    cursor: pointer;
-    display: inline-block;
-    font-family: din-round,sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: .8px;
-    line-height: 20px;
-    margin: 10px;
-    outline: none;
-    overflow: visible;
-    padding: 13px 16px;
-    text-align: center;
-    text-transform: uppercase;
-    touch-action: manipulation;
-    transform: translateZ(0);
-    transition: filter .2s;
-    user-select: none;
-    -webkit-user-select: none;
-    vertical-align: middle;
-    white-space: nowrap;
-    width: 100%;
-  }
-  
-  .settings-button-group button:after {
-    background-clip: padding-box;
-    background-color: #1CB0F6;
-    border: solid transparent;
-    border-radius: 16px;
-    border-width: 0 0 4px;
-    bottom: -4px;
-    content: "";
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: -1;
-  }
-  
-  .settings-button-group button:main,
-  .settings-button-group button:focus {
-    user-select: auto;
-  }
-  
-  
-  .settings-button-group button:hover:not(:disabled) {
-    filter: brightness(1.1);
-    -webkit-filter: brightness(1.1);
-  }
-  
-  .settings-button-group button:disabled {
-    cursor: auto;
   }
 </style>

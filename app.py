@@ -1,27 +1,32 @@
 from flask import Flask, Blueprint, flash, g, redirect, render_template, request, session, url_for
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_minify import Minify, decorators as minify_decorators
 import os, pymongo, json
 
+# Initialize Flask Components
 app = Flask(__name__)
 CORS(app)
+Minify(app=app, passive=True)
 
-mongo_username = os.environ.get('MONGO_USER', '')
-mongo_pw = os.environ.get('MONGO_PW', '')
+# MongoDB connection
+mongo_username = os.environ.get('MONGO_USER', 'mongodb')
+mongo_pw = os.environ.get('MONGO_PW', 'O43omLCHdvnC4Y2j')
+client = pymongo.MongoClient(f'mongodb+srv://{mongo_username}:{mongo_pw}@webscraper.73l0qzo.mongodb.net/?retryWrites=true&w=majority')
+db = client['cookiebanner']
+collection = db['domain']
 
-#client = pymongo.MongoClient(f'mongodb+srv://{mongo_username}:{mongo_pw}@webscraper.73l0qzo.mongodb.net/?retryWrites=true&w=majority')
-#db = client['cookiebanner']
-#collection = db['domain']
-
-bp = Blueprint('fullbanner', __name__, url_prefix='/cms/<id>')
+# Blueprints
+getBanner = Blueprint('getBanner', __name__, url_prefix='/get/<id>')
 createBanner = Blueprint('createBanner', __name__, url_prefix='/create/<id>')
-
-app.register_blueprint(bp)
+testBanner = Blueprint('testBanner', __name__, url_prefix='/test/')
+previewBanner = Blueprint('previewBanner', __name__, url_prefix='/preview/<id>')
+app.register_blueprint(getBanner)
 app.register_blueprint(createBanner)
+app.register_blueprint(testBanner)
+app.register_blueprint(previewBanner)
 
-
-@app.route('/cms/<id>', methods=['GET'])
+# Routes 
+@app.route('/get/<id>', methods=['GET'])
 def view(id):
     banner = collection.find_one({'_id': id})['banner']
     if banner: return banner
@@ -29,21 +34,24 @@ def view(id):
 
 
 @app.route('/create/<id>', methods=['GET', 'POST'])
+@minify_decorators.minify(html=True, js=True, cssless=True)
 def create(id):
-    # get json data from request
     data = request.get_json()
-
-    template = render_template('fullbanner_custom.html', data=data)
+    template = render_template('fullbanner_custom.html', d=data)
     collection.insert_one({'_id': id, 'banner': template})
-    print(f'Created banner {id}')
-    return f'Sucessfully created the template and stored it with Id {id}'
+    return f'Success'
 
 
-@app.route('/', methods=['GET'])
-def index():
-    data = json.load(open('backend/templates/customization.json'))
+@app.route('/test', methods=['GET'])
+def test(id):
+    data = json.load(open('customization.json'))
     return render_template('fullbanner_custom.html', d=data)
 
+
+@app.route('/preview/<id>', methods=['GET'])
+def preview(id):
+    data = request.get_json()
+    return render_template('fullbanner_custom.html', d=data)
 
 
 if __name__ == '__main__':
