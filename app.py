@@ -9,9 +9,7 @@ CORS(app)
 Minify(app=app, passive=True)
 
 # MongoDB connection
-mongo_username = os.environ.get('MONGO_USER', 'mongodb')
-mongo_pw = os.environ.get('MONGO_PW', 'O43omLCHdvnC4Y2j')
-client = pymongo.MongoClient(f'mongodb+srv://{mongo_username}:{mongo_pw}@webscraper.73l0qzo.mongodb.net/?retryWrites=true&w=majority')
+client = pymongo.MongoClient(os.environ.get('MONGO_CONN', ''))
 db = client['cookiebanner']
 collection = db['domain']
 
@@ -38,7 +36,7 @@ def view(id):
 def create(id):
     data = request.get_json()
     template = render_template('fullbanner_custom.html', d=data)
-    collection.insert_one({'_id': id, 'banner': template})
+    collection.update_one({'_id': id}, {'$set': { 'id': id, 'banner': template, 'data': data}}, upsert=True)
     return f'Success'
 
 
